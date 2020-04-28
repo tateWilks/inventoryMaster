@@ -35,7 +35,7 @@ class Database {
     }
 }
 
-
+//I think this is where the redirect problem occurs, so I created an 'updated' checkUser function below
 function checkUser(user) {
     if (location === '/inventory') {
         for (let i in user.memberOf) {
@@ -57,6 +57,25 @@ function checkUser(user) {
 
 }
 
+function checkUserUpdated(user) {
+    if (location === '/inventory') {
+        for (let i in user.memberOf) {
+            if (user.memberOf[i] === 'RICHARD_CROOKSTON--RBC9') {
+                return true;
+            } else if (user.memberOf[i] !== 'RICHARD_CROOKSTON--RBC9') {
+                let possiblities = ['mmcourt', 'jking793', 'rbc9', 'pdiaz3', 'kroosa', 'twilks', 'mft17']; //added myself and current employees in here, i don't think any of of the others are still working here besides rbc9
+                for (let i in possiblities) {
+                    if (possiblities[i] === user.netID) {
+                        return true;
+                    }
+                }
+            } else {
+                return false;
+            }
+        }
+    }
+}
+
 module.exports = function (req, res, next) {
     if (req.path === '/getTicket') {
         let ticket = req.query.ticket;
@@ -74,7 +93,7 @@ module.exports = function (req, res, next) {
                 user = response.attributes;
             })
             .then(() => {
-                if (checkUser(user)) {
+                if (checkUserUpdated(user)) {
                     let goTo = req.query.goTo;
                     let json = JSON.stringify(user);
                     let defaultComputerShowOptions = {
